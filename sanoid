@@ -43,6 +43,9 @@ if ($ARGV[0] eq '--verbose') {
 } elsif ($ARGV[0] eq '--version') {
 	print "Sanoid version: $version\n";
 	exit 0;
+} elsif ($ARGV[0] eq '--prunesyncsnaps') {
+	prune_sync_snapshots (@params);
+	exit 0;
 } elsif ($ARGV[0] eq '--cron' || 1) {
 	take_snapshots (@params);
 	prune_snapshots (@params);
@@ -177,7 +180,9 @@ sub prune_snapshots {
 		my $period = 0;
 
 		foreach my $type (keys %{ $config{$section} }){
-			unless ($type =~ /ly$/) { next; }
+			unless ($type =~ /hourly$/ || $type =~ /daily$/ ||
+				$type =~ /monthly$/ || $type =~ /yearly$/  
+				) { next; }
 
 			# we need to set the period length in seconds first
 			if ($type eq 'hourly') { $period = 60*60; }
@@ -989,3 +994,9 @@ sub iszfsbusy {
         return 0;
 }
 
+sub prune_sync_snapshots {
+
+	my ($config, $snaps, $snapsbytype, $snapsbypath) = @_;
+
+	exit 0;
+}
